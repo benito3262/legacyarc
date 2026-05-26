@@ -12,6 +12,10 @@ import {
   ArrowUpFromLine,
   Activity,
   Landmark,
+  ChevronRight,
+  Clock3,
+  Layers3,
+  Sparkles,
 } from "lucide-react";
 
 import {
@@ -45,7 +49,7 @@ export default function Home() {
     args: address ? [address] : undefined,
   });
 
-  // INHERITANCE STATUS
+  // STATUS
   const { data: inheritanceStatus } = useReadContract({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
@@ -70,7 +74,7 @@ export default function Home() {
       {/* NAVBAR */}
       <nav className="w-full border-b border-white/10 bg-black/20 backdrop-blur-xl sticky top-0 z-50">
 
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 py-5 flex items-center justify-between">
 
           <div className="flex items-center gap-4">
 
@@ -84,7 +88,7 @@ export default function Home() {
               </h1>
 
               <p className="text-sm text-zinc-400">
-                Institutional Digital Inheritance
+                Digital Inheritance Infrastructure
               </p>
             </div>
 
@@ -97,241 +101,304 @@ export default function Home() {
       </nav>
 
       {/* HERO */}
-      <section className="max-w-7xl mx-auto px-6 pt-28 pb-20 relative z-10">
+      <section className="max-w-7xl mx-auto px-5 lg:px-8 pt-24 lg:pt-32 pb-24 relative z-10">
 
-        <div className="max-w-4xl">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
 
-          <div className="inline-flex px-5 py-2 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-sm mb-8 backdrop-blur-xl">
-            SECURE • ONCHAIN • STABLECOIN READY
+          <div>
+
+            <div className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-cyan-500/10 border border-cyan-400/20 text-cyan-300 text-sm mb-8 backdrop-blur-xl">
+              <Sparkles size={16} />
+              SECURE • ONCHAIN • STABLECOIN READY
+            </div>
+
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-semibold leading-tight tracking-tight">
+
+              Preserve wealth
+              across generations.
+
+            </h1>
+
+            <p className="text-lg lg:text-xl text-zinc-400 mt-8 leading-relaxed max-w-2xl">
+
+              LegacyArc automates digital inheritance using
+              decentralized inactivity detection, secure vault
+              management, and beneficiary distribution powered
+              by smart contracts.
+
+            </p>
+
+            <div className="flex flex-wrap gap-4 mt-12">
+
+              <Link
+                href="/deposit"
+                className="primary-btn px-8 py-4 rounded-2xl text-lg"
+              >
+                Launch Vault
+              </Link>
+
+              <Link
+                href="/security"
+                className="glass px-8 py-4 rounded-2xl text-lg"
+              >
+                Explore Security
+              </Link>
+
+            </div>
+
           </div>
 
-          <h1 className="text-6xl md:text-7xl font-semibold leading-tight tracking-tight">
+          {/* HERO CARD */}
+          <div className="glass rounded-[32px] p-8 lg:p-10">
 
-            The inheritance layer
-            <br />
-            for digital wealth.
+            <div className="flex items-center justify-between mb-8">
 
-          </h1>
+              <div>
+                <p className="text-zinc-400 text-sm">
+                  Protected Vault
+                </p>
 
-          <p className="text-xl text-zinc-400 mt-8 leading-relaxed max-w-2xl">
+                <h2 className="text-4xl font-semibold mt-2">
+                  {vaultBalance
+                    ? Number(vaultBalance) / 1e6
+                    : "0"}
+                </h2>
 
-            LegacyArc helps families securely automate
-            stablecoin inheritance through inactivity
-            detection and decentralized vault protection.
+                <p className="text-cyan-300 mt-2">
+                  USDC Stored
+                </p>
+              </div>
 
+              <div className="w-16 h-16 rounded-3xl bg-cyan-500/10 flex items-center justify-center">
+                <Landmark className="text-cyan-300" size={30} />
+              </div>
+
+            </div>
+
+            <div className="space-y-5">
+
+              <div className="flex items-center justify-between p-5 rounded-2xl bg-white/5">
+
+                <div>
+                  <p className="text-zinc-400 text-sm">
+                    Wallet Balance
+                  </p>
+
+                  <h3 className="text-2xl font-semibold mt-1">
+                    {usdcBalance
+                      ? Number(usdcBalance) / 1e6
+                      : "0"} USDC
+                  </h3>
+                </div>
+
+                <Wallet className="text-purple-300" />
+
+              </div>
+
+              <div className="flex items-center justify-between p-5 rounded-2xl bg-white/5">
+
+                <div>
+                  <p className="text-zinc-400 text-sm">
+                    Vault Status
+                  </p>
+
+                  <h3 className="text-2xl font-semibold mt-1">
+                    {inheritanceStatus
+                      ? "Triggered"
+                      : "Protected"}
+                  </h3>
+                </div>
+
+                <Activity className="text-green-300" />
+
+              </div>
+
+              <div className="p-5 rounded-2xl bg-white/5">
+
+                <p className="text-zinc-400 text-sm mb-3">
+                  Vault Owner
+                </p>
+
+                <h3 className="break-all text-lg font-semibold">
+                  {owner
+                    ? `${String(owner).slice(0, 6)}...${String(owner).slice(-4)}`
+                    : "N/A"}
+                </h3>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* WHY SECTION */}
+      <section className="max-w-7xl mx-auto px-5 lg:px-8 py-24 relative z-10">
+
+        <div className="max-w-3xl mb-16">
+
+          <p className="text-cyan-300 mb-4">
+            WHY LEGACYARC
           </p>
 
-          <div className="flex flex-wrap gap-5 mt-12">
+          <h2 className="text-4xl lg:text-5xl font-semibold leading-tight">
+            Digital assets deserve inheritance infrastructure.
+          </h2>
 
-            <Link
-              href="/deposit"
-              className="primary-btn px-8 py-4 rounded-2xl text-lg"
-            >
-              Launch Vault
-            </Link>
+        </div>
 
-            <Link
-              href="/security"
-              className="glass px-8 py-4 rounded-2xl text-lg"
-            >
-              Security Layer
-            </Link>
+        <div className="grid md:grid-cols-3 gap-6">
 
+          <div className="glass rounded-3xl p-8">
+            <Clock3 className="text-cyan-300 mb-6" size={32} />
+
+            <h3 className="text-2xl font-semibold mb-4">
+              Automated Detection
+            </h3>
+
+            <p className="text-zinc-400 leading-relaxed">
+              Smart contracts monitor inactivity windows
+              and automate inheritance execution securely.
+            </p>
+          </div>
+
+          <div className="glass rounded-3xl p-8">
+            <ShieldCheck className="text-green-300 mb-6" size={32} />
+
+            <h3 className="text-2xl font-semibold mb-4">
+              Non-Custodial Security
+            </h3>
+
+            <p className="text-zinc-400 leading-relaxed">
+              Assets remain secured onchain with
+              transparent and verifiable execution logic.
+            </p>
+          </div>
+
+          <div className="glass rounded-3xl p-8">
+            <Layers3 className="text-purple-300 mb-6" size={32} />
+
+            <h3 className="text-2xl font-semibold mb-4">
+              Institutional Structure
+            </h3>
+
+            <p className="text-zinc-400 leading-relaxed">
+              Designed with premium fintech architecture
+              and scalable inheritance management.
+            </p>
           </div>
 
         </div>
 
       </section>
 
-      {/* LIVE STATS */}
-      <section className="max-w-7xl mx-auto px-6 pb-10 relative z-10">
+      {/* HOW IT WORKS */}
+      <section className="max-w-7xl mx-auto px-5 lg:px-8 py-24 relative z-10">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div className="flex items-center justify-between mb-14">
 
-          <div className="glass rounded-3xl p-8">
-
-            <div className="flex items-center justify-between mb-5">
-
-              <p className="text-zinc-400">
-                Vault Balance
-              </p>
-
-              <Landmark className="text-cyan-300" />
-
-            </div>
-
-            <h2 className="text-4xl font-semibold">
-              {vaultBalance
-                ? Number(vaultBalance) / 1e6
-                : "0"}
-            </h2>
-
-            <p className="text-cyan-300 mt-3">
-              USDC
+          <div>
+            <p className="text-cyan-300 mb-3">
+              HOW IT WORKS
             </p>
 
-          </div>
-
-          <div className="glass rounded-3xl p-8">
-
-            <div className="flex items-center justify-between mb-5">
-
-              <p className="text-zinc-400">
-                Wallet Balance
-              </p>
-
-              <Wallet className="text-purple-300" />
-
-            </div>
-
             <h2 className="text-4xl font-semibold">
-              {usdcBalance
-                ? Number(usdcBalance) / 1e6
-                : "0"}
+              Navigate the vault system.
             </h2>
-
-            <p className="text-purple-300 mt-3">
-              USDC
-            </p>
-
-          </div>
-
-          <div className="glass rounded-3xl p-8">
-
-            <div className="flex items-center justify-between mb-5">
-
-              <p className="text-zinc-400">
-                Vault Status
-              </p>
-
-              <Activity className="text-green-300" />
-
-            </div>
-
-            <h2 className="text-3xl font-semibold">
-              {inheritanceStatus
-                ? "Triggered"
-                : "Protected"}
-            </h2>
-
-            <div className={`mt-4 inline-flex px-4 py-2 rounded-full text-sm font-medium ${
-              inheritanceStatus
-                ? "bg-red-500/20 text-red-300"
-                : "bg-green-500/20 text-green-300"
-            }`}>
-              {inheritanceStatus
-                ? "Inheritance Active"
-                : "Owner Active"}
-            </div>
-
-          </div>
-
-          <div className="glass rounded-3xl p-8">
-
-            <div className="flex items-center justify-between mb-5">
-
-              <p className="text-zinc-400">
-                Vault Owner
-              </p>
-
-              <ShieldCheck className="text-cyan-300" />
-
-            </div>
-
-            <h2 className="text-lg font-semibold break-all">
-              {owner
-                ? `${String(owner).slice(0, 6)}...${String(owner).slice(-4)}`
-                : "N/A"}
-            </h2>
-
           </div>
 
         </div>
 
-      </section>
-
-      {/* FEATURE CARDS */}
-      <section className="max-w-7xl mx-auto px-6 pb-24 relative z-10">
-
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        <div className="grid lg:grid-cols-4 gap-6">
 
           <Link
             href="/deposit"
-            className="glass rounded-3xl p-8 hover:scale-[1.02] transition duration-300"
+            className="glass rounded-3xl p-8 hover:translate-y-[-4px] transition"
           >
 
-            <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6">
-              <ArrowDownToLine className="text-cyan-300" />
-            </div>
+            <ArrowDownToLine className="text-cyan-300 mb-6" size={32} />
 
-            <h2 className="text-2xl font-semibold mb-3">
+            <h3 className="text-2xl font-semibold mb-4">
               Deposit
-            </h2>
+            </h3>
 
-            <p className="text-zinc-400 leading-relaxed">
-              Securely deposit USDC into your
-              inheritance vault.
+            <p className="text-zinc-400 leading-relaxed mb-8">
+              Approve and deposit USDC into your inheritance vault.
             </p>
+
+            <div className="flex items-center gap-2 text-cyan-300">
+              Open Page
+              <ChevronRight size={18} />
+            </div>
 
           </Link>
 
           <Link
             href="/withdraw"
-            className="glass rounded-3xl p-8 hover:scale-[1.02] transition duration-300"
+            className="glass rounded-3xl p-8 hover:translate-y-[-4px] transition"
           >
 
-            <div className="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center mb-6">
-              <ArrowUpFromLine className="text-orange-300" />
-            </div>
+            <ArrowUpFromLine className="text-orange-300 mb-6" size={32} />
 
-            <h2 className="text-2xl font-semibold mb-3">
+            <h3 className="text-2xl font-semibold mb-4">
               Withdraw
-            </h2>
+            </h3>
 
-            <p className="text-zinc-400 leading-relaxed">
-              Access vault liquidity securely
-              anytime before inheritance trigger.
+            <p className="text-zinc-400 leading-relaxed mb-8">
+              Withdraw assets securely while the vault remains active.
             </p>
+
+            <div className="flex items-center gap-2 text-orange-300">
+              Open Page
+              <ChevronRight size={18} />
+            </div>
 
           </Link>
 
           <Link
             href="/beneficiaries"
-            className="glass rounded-3xl p-8 hover:scale-[1.02] transition duration-300"
+            className="glass rounded-3xl p-8 hover:translate-y-[-4px] transition"
           >
 
-            <div className="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6">
-              <Users className="text-purple-300" />
-            </div>
+            <Users className="text-purple-300 mb-6" size={32} />
 
-            <h2 className="text-2xl font-semibold mb-3">
+            <h3 className="text-2xl font-semibold mb-4">
               Beneficiaries
-            </h2>
+            </h3>
 
-            <p className="text-zinc-400 leading-relaxed">
-              Configure inheritance allocations
-              for trusted recipients.
+            <p className="text-zinc-400 leading-relaxed mb-8">
+              Allocate inheritance percentages to trusted wallets.
             </p>
+
+            <div className="flex items-center gap-2 text-purple-300">
+              Open Page
+              <ChevronRight size={18} />
+            </div>
 
           </Link>
 
           <Link
             href="/security"
-            className="glass rounded-3xl p-8 hover:scale-[1.02] transition duration-300"
+            className="glass rounded-3xl p-8 hover:translate-y-[-4px] transition"
           >
 
-            <div className="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center mb-6">
-              <ShieldCheck className="text-green-300" />
-            </div>
+            <ShieldCheck className="text-green-300 mb-6" size={32} />
 
-            <h2 className="text-2xl font-semibold mb-3">
+            <h3 className="text-2xl font-semibold mb-4">
               Security
-            </h2>
+            </h3>
 
-            <p className="text-zinc-400 leading-relaxed">
-              Ping alive, trigger inheritance,
-              and monitor vault status.
+            <p className="text-zinc-400 leading-relaxed mb-8">
+              Ping alive, monitor inheritance status, and trigger execution.
             </p>
+
+            <div className="flex items-center gap-2 text-green-300">
+              Open Page
+              <ChevronRight size={18} />
+            </div>
 
           </Link>
 
@@ -340,16 +407,19 @@ export default function Home() {
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-white/10 py-8 relative z-10">
+      <footer className="border-t border-white/10 py-10 relative z-10">
 
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
 
-          <div className="flex items-center gap-3">
+          <div>
 
-            <Wallet className="text-cyan-300" />
+            <h2 className="text-2xl font-semibold mb-2">
+              LegacyArc
+            </h2>
 
-            <p className="text-zinc-400">
-              Built on Arc Network
+            <p className="text-zinc-400 max-w-lg">
+              Secure digital inheritance infrastructure
+              built for stablecoin wealth management.
             </p>
 
           </div>
