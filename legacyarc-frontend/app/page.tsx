@@ -14,11 +14,11 @@ import {
   Landmark,
   ChevronRight,
   Clock3,
-  Layers3,
   Sparkles,
-  HeartPulse,
   LockKeyhole,
   Network,
+  HeartPulse,
+  HandCoins,
 } from "lucide-react";
 
 import {
@@ -37,12 +37,14 @@ export default function Home() {
 
   const { address } = useAccount();
 
+  // VAULT BALANCE
   const { data: vaultBalance } = useReadContract({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: "getBalance",
   });
 
+  // USER BALANCE
   const { data: usdcBalance } = useReadContract({
     address: USDC_ADDRESS,
     abi: ERC20_ABI,
@@ -50,12 +52,14 @@ export default function Home() {
     args: address ? [address] : undefined,
   });
 
+  // INHERITANCE STATUS
   const { data: inheritanceStatus } = useReadContract({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: "inheritanceTriggered",
   });
 
+  // OWNER
   const { data: owner } = useReadContract({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
@@ -66,9 +70,9 @@ export default function Home() {
     <main className="min-h-screen text-white overflow-hidden relative">
 
       {/* BACKGROUND */}
-      <div className="fixed top-[-300px] left-[-300px] w-[700px] h-[700px] bg-cyan-500/20 rounded-full blur-3xl" />
+      <div className="fixed top-[-320px] left-[-320px] w-[720px] h-[720px] bg-cyan-500/20 rounded-full blur-3xl" />
 
-      <div className="fixed bottom-[-300px] right-[-300px] w-[700px] h-[700px] bg-purple-600/20 rounded-full blur-3xl" />
+      <div className="fixed bottom-[-320px] right-[-320px] w-[720px] h-[720px] bg-purple-600/20 rounded-full blur-3xl" />
 
       {/* NAVBAR */}
       <nav className="w-full border-b border-white/10 bg-black/20 backdrop-blur-xl sticky top-0 z-50">
@@ -100,9 +104,9 @@ export default function Home() {
       </nav>
 
       {/* HERO */}
-      <section className="max-w-7xl mx-auto px-5 lg:px-8 pt-32 lg:pt-40 pb-36 relative z-10">
+      <section className="max-w-7xl mx-auto px-5 lg:px-8 pt-28 lg:pt-40 pb-32 relative z-10">
 
-        <div className="grid lg:grid-cols-2 gap-24 items-center">
+        <div className="grid lg:grid-cols-2 gap-20 items-center">
 
           <div>
 
@@ -119,7 +123,7 @@ export default function Home() {
 
             </h1>
 
-            <p className="text-xl text-zinc-400 mt-10 leading-relaxed max-w-2xl">
+            <p className="text-lg sm:text-xl text-zinc-400 mt-10 leading-relaxed max-w-2xl">
 
               LegacyArc helps users securely manage
               inheritance for stablecoins and digital assets
@@ -128,18 +132,18 @@ export default function Home() {
 
             </p>
 
-            <div className="flex flex-wrap gap-5 mt-14">
+            <div className="flex flex-col sm:flex-row gap-5 mt-14">
 
               <Link
                 href="/deposit"
-                className="primary-btn px-8 py-5 rounded-2xl text-lg"
+                className="primary-btn px-8 py-5 rounded-2xl text-lg text-center"
               >
                 Launch Vault
               </Link>
 
               <Link
                 href="/security"
-                className="glass px-8 py-5 rounded-2xl text-lg"
+                className="glass px-8 py-5 rounded-2xl text-lg text-center"
               >
                 Security Layer
               </Link>
@@ -149,11 +153,12 @@ export default function Home() {
           </div>
 
           {/* HERO PANEL */}
-          <div className="glass rounded-[40px] p-8 lg:p-10">
+          <div className="glass rounded-[40px] p-7 lg:p-10">
 
             <div className="flex items-center justify-between mb-8">
 
               <div>
+
                 <p className="text-zinc-400 text-sm">
                   Protected Assets
                 </p>
@@ -167,6 +172,7 @@ export default function Home() {
                 <p className="text-cyan-300 mt-3">
                   USDC IN VAULT
                 </p>
+
               </div>
 
               <div className="w-20 h-20 rounded-3xl bg-cyan-500/10 flex items-center justify-center">
@@ -179,9 +185,10 @@ export default function Home() {
 
               <div className="p-6 rounded-3xl bg-white/5">
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-5">
 
                   <div>
+
                     <p className="text-zinc-400 text-sm">
                       Wallet Balance
                     </p>
@@ -191,9 +198,10 @@ export default function Home() {
                         ? Number(usdcBalance) / 1e6
                         : "0"} USDC
                     </h3>
+
                   </div>
 
-                  <Wallet className="text-purple-300" />
+                  <Wallet className="text-purple-300 shrink-0" />
 
                 </div>
 
@@ -201,9 +209,10 @@ export default function Home() {
 
               <div className="p-6 rounded-3xl bg-white/5">
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-5">
 
                   <div>
+
                     <p className="text-zinc-400 text-sm">
                       Vault Status
                     </p>
@@ -213,9 +222,10 @@ export default function Home() {
                         ? "Triggered"
                         : "Protected"}
                     </h3>
+
                   </div>
 
-                  <Activity className="text-green-300" />
+                  <Activity className="text-green-300 shrink-0" />
 
                 </div>
 
@@ -244,11 +254,11 @@ export default function Home() {
       </section>
 
       {/* WHY SECTION */}
-      <section className="max-w-7xl mx-auto px-5 lg:px-8 py-32 relative z-10">
+      <section className="max-w-7xl mx-auto px-5 lg:px-8 py-28 relative z-10">
 
         <div className="max-w-3xl mb-20">
 
-          <p className="text-cyan-300 mb-5">
+          <p className="text-cyan-300 mb-5 tracking-[0.2em] text-sm">
             WHY LEGACYARC
           </p>
 
@@ -258,7 +268,7 @@ export default function Home() {
 
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
 
           <div className="glass rounded-[32px] p-10">
 
@@ -311,11 +321,11 @@ export default function Home() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="max-w-7xl mx-auto px-5 lg:px-8 py-32 relative z-10">
+      <section className="max-w-7xl mx-auto px-5 lg:px-8 py-28 relative z-10">
 
         <div className="max-w-3xl mb-20">
 
-          <p className="text-cyan-300 mb-5">
+          <p className="text-cyan-300 mb-5 tracking-[0.2em] text-sm">
             HOW IT WORKS
           </p>
 
@@ -418,10 +428,10 @@ export default function Home() {
             </div>
 
             <Link
-              href="/security"
+              href="/claim"
               className="glass px-8 py-5 rounded-2xl flex items-center gap-3 w-fit"
             >
-              View Security
+              Claim Assets
               <ChevronRight />
             </Link>
 
@@ -431,10 +441,157 @@ export default function Home() {
 
       </section>
 
-      {/* FOOTER */}
-      <footer className="border-t border-white/10 py-12 relative z-10">
+      {/* VAULT ACTIONS */}
+      <section className="max-w-7xl mx-auto px-5 lg:px-8 py-28 relative z-10">
 
-        <div className="max-w-7xl mx-auto px-5 lg:px-8 flex flex-col lg:flex-row gap-6 items-start lg:items-center justify-between">
+        <div className="max-w-3xl mb-20">
+
+          <p className="text-cyan-300 mb-5 tracking-[0.2em] text-sm">
+            VAULT ACTIONS
+          </p>
+
+          <h2 className="text-4xl lg:text-6xl font-semibold leading-tight">
+            Dedicated pages for every vault operation.
+          </h2>
+
+        </div>
+
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+          {/* DEPOSIT */}
+          <Link
+            href="/deposit"
+            className="glass rounded-[32px] p-10 hover:scale-[1.02] transition duration-300"
+          >
+
+            <div className="w-16 h-16 rounded-3xl bg-cyan-500/10 flex items-center justify-center mb-8">
+              <ArrowDownToLine className="text-cyan-300" size={30} />
+            </div>
+
+            <h3 className="text-3xl font-semibold mb-5">
+              Deposit
+            </h3>
+
+            <p className="text-zinc-400 text-lg leading-relaxed">
+              Securely move USDC into your
+              inheritance vault.
+            </p>
+
+          </Link>
+
+          {/* WITHDRAW */}
+          <Link
+            href="/withdraw"
+            className="glass rounded-[32px] p-10 hover:scale-[1.02] transition duration-300"
+          >
+
+            <div className="w-16 h-16 rounded-3xl bg-orange-500/10 flex items-center justify-center mb-8">
+              <ArrowUpFromLine className="text-orange-300" size={30} />
+            </div>
+
+            <h3 className="text-3xl font-semibold mb-5">
+              Withdraw
+            </h3>
+
+            <p className="text-zinc-400 text-lg leading-relaxed">
+              Access vault liquidity securely
+              before inheritance activation.
+            </p>
+
+          </Link>
+
+          {/* BENEFICIARIES */}
+          <Link
+            href="/beneficiaries"
+            className="glass rounded-[32px] p-10 hover:scale-[1.02] transition duration-300"
+          >
+
+            <div className="w-16 h-16 rounded-3xl bg-purple-500/10 flex items-center justify-center mb-8">
+              <Users className="text-purple-300" size={30} />
+            </div>
+
+            <h3 className="text-3xl font-semibold mb-5">
+              Beneficiaries
+            </h3>
+
+            <p className="text-zinc-400 text-lg leading-relaxed">
+              Manage recipient wallets and
+              inheritance allocations.
+            </p>
+
+          </Link>
+
+          {/* PING */}
+          <Link
+            href="/security"
+            className="glass rounded-[32px] p-10 hover:scale-[1.02] transition duration-300"
+          >
+
+            <div className="w-16 h-16 rounded-3xl bg-green-500/10 flex items-center justify-center mb-8">
+              <HeartPulse className="text-green-300" size={30} />
+            </div>
+
+            <h3 className="text-3xl font-semibold mb-5">
+              Ping Alive
+            </h3>
+
+            <p className="text-zinc-400 text-lg leading-relaxed">
+              Maintain activity status and
+              prevent inheritance execution.
+            </p>
+
+          </Link>
+
+          {/* CLAIM */}
+          <Link
+            href="/claim"
+            className="glass rounded-[32px] p-10 hover:scale-[1.02] transition duration-300"
+          >
+
+            <div className="w-16 h-16 rounded-3xl bg-blue-500/10 flex items-center justify-center mb-8">
+              <HandCoins className="text-blue-300" size={30} />
+            </div>
+
+            <h3 className="text-3xl font-semibold mb-5">
+              Claim Inheritance
+            </h3>
+
+            <p className="text-zinc-400 text-lg leading-relaxed">
+              Beneficiaries can securely claim
+              inherited digital assets.
+            </p>
+
+          </Link>
+
+          {/* SECURITY */}
+          <Link
+            href="/security"
+            className="glass rounded-[32px] p-10 hover:scale-[1.02] transition duration-300"
+          >
+
+            <div className="w-16 h-16 rounded-3xl bg-red-500/10 flex items-center justify-center mb-8">
+              <ShieldCheck className="text-red-300" size={30} />
+            </div>
+
+            <h3 className="text-3xl font-semibold mb-5">
+              Security Layer
+            </h3>
+
+            <p className="text-zinc-400 text-lg leading-relaxed">
+              Monitor inheritance protection
+              and trigger security operations.
+            </p>
+
+          </Link>
+
+        </div>
+
+      </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-white/10 py-14 relative z-10">
+
+        <div className="max-w-7xl mx-auto px-5 lg:px-8 flex flex-col lg:flex-row gap-8 items-start lg:items-center justify-between">
 
           <div>
 
