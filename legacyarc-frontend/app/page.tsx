@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -28,7 +29,7 @@ export default function Home() {
   const { writeContract } = useWriteContract();
 
   // VAULT BALANCE
-  const { data } = useReadContract({
+  const { data: vaultBalance } = useReadContract({
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: "getBalance",
@@ -76,12 +77,6 @@ export default function Home() {
     address: CONTRACT_ADDRESS,
     abi: CONTRACT_ABI,
     functionName: "inactivityLimit",
-  });
-
-  const { data: vaultBalance } = useReadContract({
-    address: CONTRACT_ADDRESS,
-    abi: CONTRACT_ABI,
-    functionName: "getBalance",
   });
 
   // ADD BENEFICIARY
@@ -173,7 +168,7 @@ export default function Home() {
   return (
     <main className="min-h-screen text-white overflow-hidden">
 
-      {/* BACKGROUND GLOWS */}
+      {/* BACKGROUND */}
       <div className="fixed top-[-200px] left-[-200px] w-[500px] h-[500px] bg-cyan-500/20 rounded-full blur-3xl" />
 
       <div className="fixed bottom-[-200px] right-[-200px] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-3xl" />
@@ -208,7 +203,7 @@ export default function Home() {
       </nav>
 
       {/* HERO */}
-      <section className="max-w-7xl mx-auto px-6 pt-24 pb-20 relative z-10">
+      <section className="max-w-7xl mx-auto px-6 pt-24 pb-16 relative z-10">
 
         <div className="max-w-4xl">
 
@@ -217,18 +212,14 @@ export default function Home() {
           </div>
 
           <h1 className="text-6xl md:text-7xl font-semibold leading-tight tracking-tight">
-
             The inheritance layer
             <br />
             for digital assets.
-
           </h1>
 
           <p className="text-xl text-zinc-400 mt-8 leading-relaxed max-w-2xl">
-
             Securely distribute stablecoins and onchain wealth
             to beneficiaries through automated inactivity detection.
-
           </p>
 
         </div>
@@ -292,6 +283,142 @@ export default function Home() {
             <p className="text-cyan-300 mt-2">
               Days Remaining
             </p>
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* CONTROLS */}
+      <section className="max-w-7xl mx-auto px-6 py-10 relative z-10">
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          {/* BENEFICIARIES */}
+          <div className="glass rounded-3xl p-8">
+
+            <h2 className="text-3xl font-semibold mb-2">
+              Beneficiaries
+            </h2>
+
+            <p className="text-zinc-400 mb-8">
+              Configure inheritance allocations.
+            </p>
+
+            <div className="flex flex-col gap-4">
+
+              <input
+                type="text"
+                placeholder="Wallet Address"
+                value={beneficiary}
+                onChange={(e) => setBeneficiary(e.target.value)}
+                className="input-modern w-full p-4 rounded-2xl"
+              />
+
+              <input
+                type="number"
+                placeholder="Allocation Percentage"
+                value={share}
+                onChange={(e) => setShare(e.target.value)}
+                className="input-modern w-full p-4 rounded-2xl"
+              />
+
+              <button
+                onClick={addBeneficiary}
+                className="primary-btn py-4 rounded-2xl"
+              >
+                Add Beneficiary
+              </button>
+
+            </div>
+
+          </div>
+
+          {/* VAULT CONTROLS */}
+          <div className="glass rounded-3xl p-8">
+
+            <h2 className="text-3xl font-semibold mb-2">
+              Vault Controls
+            </h2>
+
+            <p className="text-zinc-400 mb-8">
+              Deposit, withdraw, and manage inheritance.
+            </p>
+
+            <div className="flex flex-col gap-4">
+
+              <input
+                type="number"
+                placeholder="Deposit Amount (USDC)"
+                value={depositAmount}
+                onChange={(e) => setDepositAmount(e.target.value)}
+                className="input-modern w-full p-4 rounded-2xl"
+              />
+
+              <button
+                onClick={approveUSDC}
+                className="bg-yellow-500 hover:bg-yellow-400 text-black py-4 rounded-2xl font-semibold transition"
+              >
+                Approve USDC
+              </button>
+
+              <button
+                onClick={depositUSDC}
+                className="primary-btn py-4 rounded-2xl"
+              >
+                Deposit USDC
+              </button>
+
+              <button
+                onClick={withdrawUSDC}
+                className="bg-orange-500 hover:bg-orange-400 text-black py-4 rounded-2xl font-semibold transition"
+              >
+                Withdraw USDC
+              </button>
+
+              <button
+                onClick={pingAlive}
+                className="bg-green-600 hover:bg-green-500 text-white py-4 rounded-2xl font-semibold transition"
+              >
+                Ping Alive
+              </button>
+
+              <button
+                onClick={triggerInheritance}
+                className="bg-red-600 hover:bg-red-500 text-white py-4 rounded-2xl font-semibold transition"
+              >
+                Trigger Inheritance
+              </button>
+
+              <button
+                onClick={claimInheritance}
+                className="bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-semibold transition"
+              >
+                Claim Inheritance
+              </button>
+
+            </div>
+
+            <div className="mt-8 p-5 rounded-2xl bg-black/30 border border-white/10">
+
+              <p className="text-sm text-zinc-400 mb-2">
+                Claim Status
+              </p>
+
+              <h3 className="text-xl font-semibold">
+                {hasClaimed ? "Already Claimed" : "Awaiting Claim"}
+              </h3>
+
+              <div className={`mt-4 inline-flex px-4 py-2 rounded-full text-sm font-medium ${
+                inheritanceStatus
+                  ? "bg-red-500/20 text-red-300"
+                  : "bg-green-500/20 text-green-300"
+              }`}>
+                {inheritanceStatus ? "Inheritance Triggered" : "Vault Protected"}
+              </div>
+
+            </div>
+
           </div>
 
         </div>
