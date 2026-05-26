@@ -1,14 +1,22 @@
-
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 import {
+  ShieldCheck,
+  Wallet,
+  Users,
+  ArrowDownToLine,
+  ArrowUpFromLine,
+  Activity,
+  Landmark,
+} from "lucide-react";
+
+import {
   useAccount,
   useReadContract,
-  useWriteContract,
 } from "wagmi";
 
 import {
@@ -20,13 +28,7 @@ import {
 
 export default function Home() {
 
-  const [beneficiary, setBeneficiary] = useState("");
-  const [share, setShare] = useState("");
-  const [depositAmount, setDepositAmount] = useState("");
-
   const { address } = useAccount();
-
-  const { writeContract } = useWriteContract();
 
   // VAULT BALANCE
   const { data: vaultBalance } = useReadContract({
@@ -35,7 +37,7 @@ export default function Home() {
     functionName: "getBalance",
   });
 
-  // USER USDC BALANCE
+  // USER BALANCE
   const { data: usdcBalance } = useReadContract({
     address: USDC_ADDRESS,
     abi: ERC20_ABI,
@@ -50,14 +52,6 @@ export default function Home() {
     functionName: "inheritanceTriggered",
   });
 
-  // CLAIM STATUS
-  const { data: hasClaimed } = useReadContract({
-    address: CONTRACT_ADDRESS,
-    abi: CONTRACT_ABI,
-    functionName: "hasClaimed",
-    args: address ? [address] : undefined,
-  });
-
   // OWNER
   const { data: owner } = useReadContract({
     address: CONTRACT_ADDRESS,
@@ -65,113 +59,13 @@ export default function Home() {
     functionName: "owner",
   });
 
-  // LAST ACTIVE
-  const { data: lastAlive } = useReadContract({
-    address: CONTRACT_ADDRESS,
-    abi: CONTRACT_ABI,
-    functionName: "lastAlive",
-  });
-
-  // INACTIVITY LIMIT
-  const { data: inactivityLimit } = useReadContract({
-    address: CONTRACT_ADDRESS,
-    abi: CONTRACT_ABI,
-    functionName: "inactivityLimit",
-  });
-
-  // ADD BENEFICIARY
-  const addBeneficiary = async () => {
-    writeContract({
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      functionName: "addBeneficiary",
-      args: [beneficiary, BigInt(share)],
-    });
-  };
-
-  // HEARTBEAT
-  const pingAlive = async () => {
-    writeContract({
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      functionName: "pingAlive",
-    });
-  };
-
-  // TRIGGER
-  const triggerInheritance = async () => {
-    writeContract({
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      functionName: "triggerInheritance",
-    });
-  };
-
-  // CLAIM
-  const claimInheritance = async () => {
-    writeContract({
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      functionName: "claim",
-    });
-  };
-
-  // APPROVE USDC
-  const approveUSDC = async () => {
-    writeContract({
-      address: USDC_ADDRESS,
-      abi: ERC20_ABI,
-      functionName: "approve",
-      args: [
-        CONTRACT_ADDRESS,
-        BigInt(Number(depositAmount) * 1e6),
-      ],
-    });
-  };
-
-  // DEPOSIT
-  const depositUSDC = async () => {
-    writeContract({
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      functionName: "deposit",
-      args: [
-        BigInt(Number(depositAmount) * 1e6),
-      ],
-    });
-  };
-
-  // WITHDRAW
-  const withdrawUSDC = async () => {
-    writeContract({
-      address: CONTRACT_ADDRESS,
-      abi: CONTRACT_ABI,
-      functionName: "withdraw",
-      args: [
-        BigInt(Number(depositAmount) * 1e6),
-      ],
-    });
-  };
-
-  const now = Math.floor(Date.now() / 1000);
-
-  const timeRemaining =
-    lastAlive && inactivityLimit
-      ? Number(lastAlive) + Number(inactivityLimit) - now
-      : 0;
-
-  const daysRemaining =
-    timeRemaining > 0
-      ? Math.floor(timeRemaining / 86400)
-      : 0;
-
   return (
-    <main className="min-h-screen text-white overflow-hidden">
+    <main className="min-h-screen text-white overflow-hidden relative">
 
       {/* BACKGROUND */}
-      <div className="fixed top-[-200px] left-[-200px] w-[500px] h-[500px] bg-cyan-500/20 rounded-full blur-3xl" />
+      <div className="fixed top-[-250px] left-[-250px] w-[600px] h-[600px] bg-cyan-500/20 rounded-full blur-3xl" />
 
-      <div className="fixed bottom-[-200px] right-[-200px] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-3xl" />
+      <div className="fixed bottom-[-250px] right-[-250px] w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-3xl" />
 
       {/* NAVBAR */}
       <nav className="w-full border-b border-white/10 bg-black/20 backdrop-blur-xl sticky top-0 z-50">
@@ -203,7 +97,7 @@ export default function Home() {
       </nav>
 
       {/* HERO */}
-      <section className="max-w-7xl mx-auto px-6 pt-24 pb-16 relative z-10">
+      <section className="max-w-7xl mx-auto px-6 pt-28 pb-20 relative z-10">
 
         <div className="max-w-4xl">
 
@@ -212,218 +106,261 @@ export default function Home() {
           </div>
 
           <h1 className="text-6xl md:text-7xl font-semibold leading-tight tracking-tight">
+
             The inheritance layer
             <br />
-            for digital assets.
+            for digital wealth.
+
           </h1>
 
           <p className="text-xl text-zinc-400 mt-8 leading-relaxed max-w-2xl">
-            Securely distribute stablecoins and onchain wealth
-            to beneficiaries through automated inactivity detection.
+
+            LegacyArc helps families securely automate
+            stablecoin inheritance through inactivity
+            detection and decentralized vault protection.
+
           </p>
+
+          <div className="flex flex-wrap gap-5 mt-12">
+
+            <Link
+              href="/deposit"
+              className="primary-btn px-8 py-4 rounded-2xl text-lg"
+            >
+              Launch Vault
+            </Link>
+
+            <Link
+              href="/security"
+              className="glass px-8 py-4 rounded-2xl text-lg"
+            >
+              Security Layer
+            </Link>
+
+          </div>
 
         </div>
 
       </section>
 
-      {/* STATS */}
-      <section className="max-w-7xl mx-auto px-6 relative z-10">
+      {/* LIVE STATS */}
+      <section className="max-w-7xl mx-auto px-6 pb-10 relative z-10">
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
           <div className="glass rounded-3xl p-8">
-            <p className="text-zinc-400 text-sm mb-3">
-              Vault Balance
-            </p>
+
+            <div className="flex items-center justify-between mb-5">
+
+              <p className="text-zinc-400">
+                Vault Balance
+              </p>
+
+              <Landmark className="text-cyan-300" />
+
+            </div>
 
             <h2 className="text-4xl font-semibold">
-              {vaultBalance ? Number(vaultBalance) / 1e6 : "0"}
+              {vaultBalance
+                ? Number(vaultBalance) / 1e6
+                : "0"}
             </h2>
 
-            <p className="text-cyan-300 mt-2">
+            <p className="text-cyan-300 mt-3">
               USDC
             </p>
+
           </div>
 
           <div className="glass rounded-3xl p-8">
-            <p className="text-zinc-400 text-sm mb-3">
-              Wallet Balance
-            </p>
+
+            <div className="flex items-center justify-between mb-5">
+
+              <p className="text-zinc-400">
+                Wallet Balance
+              </p>
+
+              <Wallet className="text-purple-300" />
+
+            </div>
 
             <h2 className="text-4xl font-semibold">
-              {usdcBalance ? Number(usdcBalance) / 1e6 : "0"}
+              {usdcBalance
+                ? Number(usdcBalance) / 1e6
+                : "0"}
             </h2>
 
-            <p className="text-cyan-300 mt-2">
+            <p className="text-purple-300 mt-3">
               USDC
             </p>
+
           </div>
 
           <div className="glass rounded-3xl p-8">
-            <p className="text-zinc-400 text-sm mb-3">
-              Owner
-            </p>
+
+            <div className="flex items-center justify-between mb-5">
+
+              <p className="text-zinc-400">
+                Vault Status
+              </p>
+
+              <Activity className="text-green-300" />
+
+            </div>
+
+            <h2 className="text-3xl font-semibold">
+              {inheritanceStatus
+                ? "Triggered"
+                : "Protected"}
+            </h2>
+
+            <div className={`mt-4 inline-flex px-4 py-2 rounded-full text-sm font-medium ${
+              inheritanceStatus
+                ? "bg-red-500/20 text-red-300"
+                : "bg-green-500/20 text-green-300"
+            }`}>
+              {inheritanceStatus
+                ? "Inheritance Active"
+                : "Owner Active"}
+            </div>
+
+          </div>
+
+          <div className="glass rounded-3xl p-8">
+
+            <div className="flex items-center justify-between mb-5">
+
+              <p className="text-zinc-400">
+                Vault Owner
+              </p>
+
+              <ShieldCheck className="text-cyan-300" />
+
+            </div>
 
             <h2 className="text-lg font-semibold break-all">
               {owner
                 ? `${String(owner).slice(0, 6)}...${String(owner).slice(-4)}`
                 : "N/A"}
             </h2>
-          </div>
 
-          <div className="glass rounded-3xl p-8">
-            <p className="text-zinc-400 text-sm mb-3">
-              Inactivity Timer
-            </p>
-
-            <h2 className="text-4xl font-semibold">
-              {daysRemaining}
-            </h2>
-
-            <p className="text-cyan-300 mt-2">
-              Days Remaining
-            </p>
           </div>
 
         </div>
 
       </section>
 
-      {/* CONTROLS */}
-      <section className="max-w-7xl mx-auto px-6 py-10 relative z-10">
+      {/* FEATURE CARDS */}
+      <section className="max-w-7xl mx-auto px-6 pb-24 relative z-10">
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
-          {/* BENEFICIARIES */}
-          <div className="glass rounded-3xl p-8">
+          <Link
+            href="/deposit"
+            className="glass rounded-3xl p-8 hover:scale-[1.02] transition duration-300"
+          >
 
-            <h2 className="text-3xl font-semibold mb-2">
+            <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 flex items-center justify-center mb-6">
+              <ArrowDownToLine className="text-cyan-300" />
+            </div>
+
+            <h2 className="text-2xl font-semibold mb-3">
+              Deposit
+            </h2>
+
+            <p className="text-zinc-400 leading-relaxed">
+              Securely deposit USDC into your
+              inheritance vault.
+            </p>
+
+          </Link>
+
+          <Link
+            href="/withdraw"
+            className="glass rounded-3xl p-8 hover:scale-[1.02] transition duration-300"
+          >
+
+            <div className="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center mb-6">
+              <ArrowUpFromLine className="text-orange-300" />
+            </div>
+
+            <h2 className="text-2xl font-semibold mb-3">
+              Withdraw
+            </h2>
+
+            <p className="text-zinc-400 leading-relaxed">
+              Access vault liquidity securely
+              anytime before inheritance trigger.
+            </p>
+
+          </Link>
+
+          <Link
+            href="/beneficiaries"
+            className="glass rounded-3xl p-8 hover:scale-[1.02] transition duration-300"
+          >
+
+            <div className="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6">
+              <Users className="text-purple-300" />
+            </div>
+
+            <h2 className="text-2xl font-semibold mb-3">
               Beneficiaries
             </h2>
 
-            <p className="text-zinc-400 mb-8">
-              Configure inheritance allocations.
+            <p className="text-zinc-400 leading-relaxed">
+              Configure inheritance allocations
+              for trusted recipients.
             </p>
 
-            <div className="flex flex-col gap-4">
+          </Link>
 
-              <input
-                type="text"
-                placeholder="Wallet Address"
-                value={beneficiary}
-                onChange={(e) => setBeneficiary(e.target.value)}
-                className="input-modern w-full p-4 rounded-2xl"
-              />
+          <Link
+            href="/security"
+            className="glass rounded-3xl p-8 hover:scale-[1.02] transition duration-300"
+          >
 
-              <input
-                type="number"
-                placeholder="Allocation Percentage"
-                value={share}
-                onChange={(e) => setShare(e.target.value)}
-                className="input-modern w-full p-4 rounded-2xl"
-              />
-
-              <button
-                onClick={addBeneficiary}
-                className="primary-btn py-4 rounded-2xl"
-              >
-                Add Beneficiary
-              </button>
-
+            <div className="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center mb-6">
+              <ShieldCheck className="text-green-300" />
             </div>
 
-          </div>
-
-          {/* VAULT CONTROLS */}
-          <div className="glass rounded-3xl p-8">
-
-            <h2 className="text-3xl font-semibold mb-2">
-              Vault Controls
+            <h2 className="text-2xl font-semibold mb-3">
+              Security
             </h2>
 
-            <p className="text-zinc-400 mb-8">
-              Deposit, withdraw, and manage inheritance.
+            <p className="text-zinc-400 leading-relaxed">
+              Ping alive, trigger inheritance,
+              and monitor vault status.
             </p>
 
-            <div className="flex flex-col gap-4">
-
-              <input
-                type="number"
-                placeholder="Deposit Amount (USDC)"
-                value={depositAmount}
-                onChange={(e) => setDepositAmount(e.target.value)}
-                className="input-modern w-full p-4 rounded-2xl"
-              />
-
-              <button
-                onClick={approveUSDC}
-                className="bg-yellow-500 hover:bg-yellow-400 text-black py-4 rounded-2xl font-semibold transition"
-              >
-                Approve USDC
-              </button>
-
-              <button
-                onClick={depositUSDC}
-                className="primary-btn py-4 rounded-2xl"
-              >
-                Deposit USDC
-              </button>
-
-              <button
-                onClick={withdrawUSDC}
-                className="bg-orange-500 hover:bg-orange-400 text-black py-4 rounded-2xl font-semibold transition"
-              >
-                Withdraw USDC
-              </button>
-
-              <button
-                onClick={pingAlive}
-                className="bg-green-600 hover:bg-green-500 text-white py-4 rounded-2xl font-semibold transition"
-              >
-                Ping Alive
-              </button>
-
-              <button
-                onClick={triggerInheritance}
-                className="bg-red-600 hover:bg-red-500 text-white py-4 rounded-2xl font-semibold transition"
-              >
-                Trigger Inheritance
-              </button>
-
-              <button
-                onClick={claimInheritance}
-                className="bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-2xl font-semibold transition"
-              >
-                Claim Inheritance
-              </button>
-
-            </div>
-
-            <div className="mt-8 p-5 rounded-2xl bg-black/30 border border-white/10">
-
-              <p className="text-sm text-zinc-400 mb-2">
-                Claim Status
-              </p>
-
-              <h3 className="text-xl font-semibold">
-                {hasClaimed ? "Already Claimed" : "Awaiting Claim"}
-              </h3>
-
-              <div className={`mt-4 inline-flex px-4 py-2 rounded-full text-sm font-medium ${
-                inheritanceStatus
-                  ? "bg-red-500/20 text-red-300"
-                  : "bg-green-500/20 text-green-300"
-              }`}>
-                {inheritanceStatus ? "Inheritance Triggered" : "Vault Protected"}
-              </div>
-
-            </div>
-
-          </div>
+          </Link>
 
         </div>
 
       </section>
+
+      {/* FOOTER */}
+      <footer className="border-t border-white/10 py-8 relative z-10">
+
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+
+          <div className="flex items-center gap-3">
+
+            <Wallet className="text-cyan-300" />
+
+            <p className="text-zinc-400">
+              Built on Arc Network
+            </p>
+
+          </div>
+
+          <p className="text-zinc-500 text-sm">
+            LegacyArc © 2026
+          </p>
+
+        </div>
+
+      </footer>
 
     </main>
   );
