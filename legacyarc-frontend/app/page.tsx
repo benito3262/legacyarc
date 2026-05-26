@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
@@ -23,9 +23,32 @@ export default function Home() {
   const [share, setShare] = useState("");
   const [depositAmount, setDepositAmount] = useState("");
 
+  const [timeLeft, setTimeLeft] = useState("Loading...");
+
   const { address } = useAccount();
 
   const { writeContract } = useWriteContract();
+
+  // OWNER
+  const { data: owner } = useReadContract({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    functionName: "owner",
+  });
+
+  // LAST ACTIVE
+  const { data: lastAlive } = useReadContract({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    functionName: "lastAlive",
+  });
+
+  // INACTIVITY LIMIT
+  const { data: inactivityLimit } = useReadContract({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    functionName: "inactivityLimit",
+  });
 
   // VAULT BALANCE
   const { data } = useReadContract({
@@ -56,6 +79,45 @@ export default function Home() {
     functionName: "hasClaimed",
     args: address ? [address] : undefined,
   });
+
+  // COUNTDOWN TIMER
+  useEffect(() => {
+
+    if (!lastAlive || !inactivityLimit) return;
+
+    const interval = setInterval(() => {
+
+      const currentTime = Math.floor(Date.now() / 1000);
+
+      const expiry =
+        Number(lastAlive) + Number(inactivityLimit);
+
+      const difference = expiry - currentTime;
+
+      if (difference <= 0) {
+        setTimeLeft("Inheritance Trigger Available");
+        return;
+      }
+
+      const days = Math.floor(difference / 86400);
+
+      const hours = Math.floor(
+        (difference % 86400) / 3600
+      );
+
+      const minutes = Math.floor(
+        (difference % 3600) / 60
+      );
+
+      setTimeLeft(
+        `${days}d ${hours}h ${minutes}m`
+      );
+
+    }, 1000);
+
+    return () => clearInterval(interval);
+
+  }, [lastAlive, inactivityLimit]);
 
   // ADD BENEFICIARY
   const addBeneficiary = async () => {
@@ -119,6 +181,18 @@ export default function Home() {
     });
   };
 
+  // WITHDRAW
+  const withdrawUSDC = async () => {
+    writeContract({
+      address: CONTRACT_ADDRESS,
+      abi: CONTRACT_ABI,
+      functionName: "withdraw",
+      args: [
+        BigInt(Number(depositAmount) * 1e6),
+      ],
+    });
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-[#0B1020] via-[#111827] to-[#1E293B] text-white">
 
@@ -176,7 +250,7 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-6 pb-20">
 
         {/* TOP CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 
           <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10">
             <p className="text-zinc-400 text-sm mb-4">
@@ -222,6 +296,24 @@ export default function Home() {
             }`}>
               {inheritanceStatus ? "Triggered" : "Protected"}
             </div>
+          </div>
+
+          <div className="bg-white/5 backdrop-blur-xl rounded-3xl p-8 border border-white/10">
+            <p className="text-zinc-400 text-sm mb-4">
+              Countdown
+            </p>
+
+            <h2 className="text-2xl font-semibold">
+              {timeLeft}
+            </h2>
+
+            <p className="text-cyan-300 mt-4 text-sm break-all">
+              Owner:
+            </p>
+
+            <p className="text-sm text-zinc-400 mt-1 break-all">
+              {owner ? String(owner) : "Loading..."}
+            </p>
           </div>
 
         </div>
@@ -302,6 +394,13 @@ export default function Home() {
                 className="bg-cyan-500 hover:bg-cyan-400 text-black py-4 rounded-2xl font-semibold transition"
               >
                 Deposit USDC
+              </button>
+
+              <button
+                onClick={withdrawUSDC}
+                className="bg-orange-500 hover:bg-orange-400 text-black py-4 rounded-2xl font-semibold transition"
+              >
+                Withdraw USDC
               </button>
 
               <button
