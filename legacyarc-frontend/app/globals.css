@@ -1,10 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #060816;
+  --background: #040816;
   --foreground: #f8fafc;
 
-  --card: rgba(255, 255, 255, 0.06);
+  --card: rgba(255, 255, 255, 0.05);
+
   --border: rgba(255, 255, 255, 0.08);
 
   --cyan: #22d3ee;
@@ -24,9 +25,20 @@ html {
 
 body {
   background:
-    radial-gradient(circle at top left, rgba(34, 211, 238, 0.12), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(139, 92, 246, 0.12), transparent 30%),
-    linear-gradient(to bottom right, #050816, #0b1020, #111827);
+    radial-gradient(circle at top left,
+      rgba(34, 211, 238, 0.14),
+      transparent 30%),
+
+    radial-gradient(circle at bottom right,
+      rgba(139, 92, 246, 0.14),
+      transparent 30%),
+
+    linear-gradient(
+      to bottom right,
+      #030712,
+      #071120,
+      #0f172a
+    );
 
   color: var(--foreground);
 
@@ -41,46 +53,70 @@ body {
   overflow-x: hidden;
 }
 
-/* GLASS EFFECT */
+/* GLASS CARDS */
 .glass {
   background: rgba(255, 255, 255, 0.05);
 
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(20px);
 
   border: 1px solid rgba(255, 255, 255, 0.08);
 
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.25);
+    0 8px 40px rgba(0, 0, 0, 0.3);
+
+  transition:
+    transform 0.25s ease,
+    border 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
-/* GLOW */
+.glass:hover {
+  transform: translateY(-6px);
+
+  border: 1px solid rgba(34, 211, 238, 0.2);
+
+  box-shadow:
+    0 10px 50px rgba(34, 211, 238, 0.08);
+}
+
+/* GLOW EFFECT */
 .glow {
   box-shadow:
-    0 0 30px rgba(34, 211, 238, 0.25);
+    0 0 40px rgba(34, 211, 238, 0.25);
 }
 
-/* BUTTON */
+/* BUTTONS */
 .primary-btn {
-  background: linear-gradient(
-    to right,
-    #22d3ee,
-    #3b82f6
-  );
+  background:
+    linear-gradient(
+      to right,
+      #22d3ee,
+      #3b82f6
+    );
 
   color: black;
 
   font-weight: 700;
 
-  transition: 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease,
+    box-shadow 0.25s ease;
+
+  box-shadow:
+    0 10px 30px rgba(34, 211, 238, 0.2);
 }
 
 .primary-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 
-  opacity: 0.92;
+  opacity: 0.95;
+
+  box-shadow:
+    0 14px 40px rgba(34, 211, 238, 0.35);
 }
 
-/* INPUT */
+/* INPUTS */
 .input-modern {
   background: rgba(0, 0, 0, 0.35);
 
@@ -88,16 +124,50 @@ body {
 
   color: white;
 
-  transition: 0.2s ease;
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+
+  backdrop-filter: blur(14px);
+}
+
+.input-modern::placeholder {
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .input-modern:focus {
   outline: none;
 
-  border-color: rgba(34, 211, 238, 0.7);
+  border-color:
+    rgba(34, 211, 238, 0.7);
+
+  background:
+    rgba(255, 255, 255, 0.04);
 
   box-shadow:
     0 0 0 4px rgba(34, 211, 238, 0.12);
+}
+
+/* SECTION SPACING */
+section {
+  position: relative;
+  z-index: 2;
+}
+
+/* TEXT EFFECTS */
+.gradient-text {
+  background:
+    linear-gradient(
+      to right,
+      #22d3ee,
+      #60a5fa,
+      #8b5cf6
+    );
+
+  -webkit-background-clip: text;
+
+  -webkit-text-fill-color: transparent;
 }
 
 /* SCROLLBAR */
@@ -106,15 +176,17 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #0b1020;
+  background: #071120;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background:
+    rgba(255, 255, 255, 0.14);
 
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background:
+    rgba(255, 255, 255, 0.24);
 }
